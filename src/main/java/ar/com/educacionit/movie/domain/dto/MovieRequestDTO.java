@@ -1,71 +1,23 @@
-package ar.com.educacionit.movie.domain;
+package ar.com.educacionit.movie.domain.dto;
 
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
 
-@Entity
-@Table(name="movies")
-public class Movie {
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id; //el nombre del atributo es igual al de la base
-	
-	   @ManyToMany(fetch=FetchType.EAGER)
-		@JoinTable(
-				name="genres_x_movies",
-				joinColumns = @JoinColumn(name="movie_id"),
-				inverseJoinColumns = @JoinColumn(name="genre_id"))
-//	   private Set<MovieGenre> genres = new HashSet<>();
-	   private List<MovieGenre> genres;
-
-	
-	//@Column(name="nombre de la columna en la BBDD")
-	@Column(name="adult", nullable=false)
+public class MovieRequestDTO {
+	private Long id;
 	private Boolean adult;
-	
-	@Column(name="original_language", length = 255, nullable=true)
 	private String originalLanguage;
-	
-	@Column(name="original_title", unique=true, nullable=false, length=255)
 	private String originalTitle;
-	
-	@Column(name="overview", nullable=false)
 	private String overview;
-	
-	@Column(name="popularity")
 	private Double popularity;
-	
-	@Column(name="poster_path")
 	private String posterPath;
-	
-	@Column(name="release_date")
 	private String releaseDate;
-	
-	@Column(name="title", nullable=false)
 	private String title;
-	
-	@Column(name="video")
 	private Boolean video;
-	
-	@Column(name="vote_average")
 	private Double voteAverage;
-	
-	@Column(name="vote_count")
 	private Integer voteCount;
+	private List<Long> genreIds;
 
 	public Long getId() {
 		return id;
@@ -165,26 +117,17 @@ public class Movie {
 	
 	
 
-//	public Set<MovieGenre> getGenres() {
-//		return genres;
-//	}
-//
-//	public void setGenres(Set<MovieGenre> genres) {
-//		this.genres = genres;
-//	}
-	public List<MovieGenre> getGenres() {
-		return genres;
+	public List<Long> getGenreIds() {
+		return genreIds;
 	}
-	
-	public void setGenres(List<MovieGenre> genres) {
-		this.genres = genres;
+
+	public void setGenreIds(List<Long> genreIds) {
+		this.genreIds = genreIds;
 	}
-	
-	
 
 	@Override
 	public String toString() {
-		return "Movie [id=" + id + ", genres=" + genres + ", adult=" + adult + ", originalLanguage=" + originalLanguage
+		return "Movie [id=" + id + ", genres=" + genreIds + ", adult=" + adult + ", originalLanguage=" + originalLanguage
 				+ ", originalTitle=" + originalTitle + ", overview=" + overview + ", popularity=" + popularity
 				+ ", posterPath=" + posterPath + ", releaseDate=" + releaseDate + ", title=" + title + ", video="
 				+ video + ", voteAverage=" + voteAverage + ", voteCount=" + voteCount + "]";

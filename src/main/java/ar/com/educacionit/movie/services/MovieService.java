@@ -1,6 +1,7 @@
 package ar.com.educacionit.movie.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,17 @@ public class MovieService {
 	
 	public void deleteById(Long id) {
 		this.movieRepository.deleteById(id);
+	}
+
+	public Optional<Movie> searchByTitle(String originalTitle) {
+		
+		return this.movieRepository.findByOriginalTitle(originalTitle);
+	}
+
+	public void createMovie(Movie newMovie) {
+		// TODO Auto-generated method stub
+		this.movieRepository.save(newMovie);
+		
 	}
 
 }

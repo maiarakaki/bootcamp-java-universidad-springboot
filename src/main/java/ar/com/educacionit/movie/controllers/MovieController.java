@@ -1,17 +1,24 @@
 package ar.com.educacionit.movie.controllers;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.com.educacionit.movie.domain.Movie;
+import ar.com.educacionit.movie.domain.MovieGenre;
+import ar.com.educacionit.movie.domain.dto.MovieRequestDTO;
 import ar.com.educacionit.movie.repository.MovieRepository;
 import ar.com.educacionit.movie.services.MovieService;
 
@@ -47,6 +54,37 @@ public class MovieController {
 		return ResponseEntity.ok(movieService.getById(id)) ;
 	}
 	//crear una pelicula
+	@PostMapping
+	public ResponseEntity<Long> createMovie(
+			@RequestBody MovieRequestDTO request
+	){
+		Optional<Movie> movie = this.movieService.searchByTitle(request.getOriginalTitle());
+		if (movie.isPresent()) {
+			return ResponseEntity.status(HttpStatus.CREATED).body(movie.get().getId());
+		}
+		
+		//lo crea y luego lo devuelve
+		Movie newMovie = new Movie();
+		newMovie.setAdult(request.getAdult());
+		List <MovieGenre> genres = request.getGenreIds()
+				.stream()
+				.map(x -> new MovieGenre(x))
+				.collect(Collectors.toList());
+		newMovie.setGenres(genres);
+		newMovie.setOriginalLanguage(request.getOriginalLanguage());
+		newMovie.setOriginalTitle(request.getOriginalTitle());
+		newMovie.setOverview(request.getOverview());
+		newMovie.setPopularity(request.getPopularity());
+		newMovie.setPosterPath(request.getPosterPath());
+		newMovie.setReleaseDate(request.getReleaseDate());
+		newMovie.setTitle(request.getTitle());
+		newMovie.setVideo(request.getVideo());
+		newMovie.setVoteAverage(request.getVoteAverage());
+		newMovie.setVoteCount(request.getVoteCount());
+		
+		this.movieService.createMovie(newMovie);
+		return ResponseEntity.status(HttpStatus.CREATED).body(newMovie.getId());
+	}
 	
 	//eliminar una pelicula
 	@DeleteMapping("/{id}")
