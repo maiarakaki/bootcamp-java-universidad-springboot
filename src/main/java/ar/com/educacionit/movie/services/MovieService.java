@@ -22,5 +22,9 @@ public class MovieService {
 	public Movie getById(Long id) {
 		return this.movieRepository.findById(id).orElse(null);
 	}
+	
+	public void deleteById(Long id) {
+		this.movieRepository.deleteById(id);
+	}
 
 }
