@@ -18,6 +18,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class MovieUpdateRequestDTO {
+	@NotNull
+	private Long id;
 	@NotBlank
 	private String originalTitle;
 	@NotBlank

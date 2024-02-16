@@ -20,4 +20,17 @@ public class ExceptionControllerHandler {
 		return ResponseEntity.badRequest().body(errors);
 //		return ResponseEntity.badRequest().body(ex.getBindingResult().getAllErrors());
 	}
+	@ExceptionHandler(MyBadRequestException.class)
+	public ResponseEntity<?> fallaEnValidacion(MyBadRequestException ex){
+		//logica de control del error
+		
+		return ResponseEntity.badRequest().body(ex.getMessage());
+	}
+	
+	@ExceptionHandler(MovieDoesNotExistException.class)
+	public ResponseEntity<?> fallaEnValidacion(MovieDoesNotExistException ex){
+		//logica de control del error
+		
+		return ResponseEntity.badRequest().body(ex.getMessage());
+	}
 }

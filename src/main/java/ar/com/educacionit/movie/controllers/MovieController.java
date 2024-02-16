@@ -21,6 +21,8 @@ import ar.com.educacionit.movie.domain.Movie;
 import ar.com.educacionit.movie.domain.MovieGenre;
 import ar.com.educacionit.movie.domain.dto.MovieRequestDTO;
 import ar.com.educacionit.movie.domain.dto.MovieUpdateRequestDTO;
+import ar.com.educacionit.movie.exceptions.MovieDoesNotExistException;
+import ar.com.educacionit.movie.exceptions.MyBadRequestException;
 import ar.com.educacionit.movie.services.MovieService;
 
 @RestController
@@ -102,13 +104,22 @@ public class MovieController {
 	//actualizar una pelicula
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> updateMovie(
-			@PathVariable("id") Long id,
+			@PathVariable(name="id", required=true) Long id,
 			@RequestBody MovieUpdateRequestDTO request
 			){
+		if(id != request.getId().longValue()) {
+
+			throw new MyBadRequestException(
+					"los id son diferentes");
+		} 
+		
+		
 		Movie movie = movieService.getById(id);
-		if(movie == null) {
-			return ResponseEntity.notFound().build();			
-		}
+//		if(movie == null) {
+//			return ResponseEntity.notFound().build();			
+//		} else {
+		try {
+			
 			movie.setOriginalTitle(request.getOriginalTitle());
 			movie.setOverview(request.getOverview());
 			movie.setPopularity(request.getPopularity());
@@ -118,6 +129,11 @@ public class MovieController {
 			
 			movieService.updateMovie(movie);
 			return ResponseEntity.ok().build() ;
+		} catch (NullPointerException ex){
+			throw new MovieDoesNotExistException("La película con id "+ id + " no existe");	
+		}
+			
+//		}
 	}
 	
 }
