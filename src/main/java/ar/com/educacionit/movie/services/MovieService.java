@@ -38,5 +38,9 @@ public class MovieService {
 		this.movieRepository.save(newMovie);
 		
 	}
+	
+	public void updateMovie(Movie movie) {
+		this.movieRepository.save(movie);
+	}
 
 }

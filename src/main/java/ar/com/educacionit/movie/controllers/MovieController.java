@@ -105,9 +105,19 @@ public class MovieController {
 			@PathVariable("id") Long id,
 			@RequestBody MovieUpdateRequestDTO request
 			){
-
-		System.out.println(request.getOriginalTitle());
-		return null;
+		Movie movie = movieService.getById(id);
+		if(movie == null) {
+			return ResponseEntity.notFound().build();			
+		}
+			movie.setOriginalTitle(request.getOriginalTitle());
+			movie.setOverview(request.getOverview());
+			movie.setPopularity(request.getPopularity());
+			movie.setPosterPath(request.getPosterPath());
+			movie.setVoteAverage(request.getVoteAverage());
+			movie.setVoteCount(request.getVoteCount());
+			
+			movieService.updateMovie(movie);
+			return ResponseEntity.ok().build() ;
 	}
 	
 }
