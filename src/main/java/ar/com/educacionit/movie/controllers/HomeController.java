@@ -15,10 +15,10 @@ public class HomeController {
 
 	
 	// cuando ingrese a http://localhost:8080 viene acá
-	@RequestMapping(value={"/", "/pepe"}, method =RequestMethod.GET)
+	@RequestMapping(value={"/"}, method =RequestMethod.GET)
 	public String home() {
 
 		//redirecciona a src/main/resources/static/index.html
-		return "index"; //asume que la extension es .html
+		return "redirect:/swagger-ui/index.html"; //asume que la extension es .html
 	}
 }

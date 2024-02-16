@@ -139,4 +139,6 @@ public class MovieController {
 //		}
 	}
 	
+	//agregar endpoint para recibir binario
+	//blob / file system url > obtener luego la imagen
 }
