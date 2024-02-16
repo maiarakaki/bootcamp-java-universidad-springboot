@@ -5,10 +5,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,17 +22,23 @@ import ar.com.educacionit.movie.domain.dto.MovieRequestDTO;
 import ar.com.educacionit.movie.domain.dto.MovieUpdateRequestDTO;
 import ar.com.educacionit.movie.exceptions.MovieDoesNotExistException;
 import ar.com.educacionit.movie.exceptions.MyBadRequestException;
+import ar.com.educacionit.movie.security.service.ExternalMovieService;
 import ar.com.educacionit.movie.services.MovieService;
+
+
 
 @RestController
 @RequestMapping("/movies")
 public class MovieController {
 	
+	private final ExternalMovieService externalMovieService;
 	//@Autowired
 	private final MovieService movieService;
 	
-	public MovieController (MovieService movieService) {
+	
+	public MovieController (MovieService movieService, ExternalMovieService externalMovieService) {
 		this.movieService = movieService;
+		this.externalMovieService = externalMovieService;
 	}
 	
 	@GetMapping
@@ -53,10 +57,14 @@ public class MovieController {
 		
 		Movie movie =movieService.getById(id);
 		
+		
 		if (movie == null ) {
-			return ResponseEntity.notFound().build();
+			movie = externalMovieService.getMovieById(id);
+			if (movie == null) {
+				return ResponseEntity.notFound().build();				
+			}
 		}
-		return ResponseEntity.ok(movieService.getById(id)) ;
+		return ResponseEntity.ok(movie) ;
 	}
 	//crear una pelicula
 	@PostMapping
